@@ -10,7 +10,7 @@ OUT = "GP_41_Crypto_Transaction_System.pptx"   # GP_XX_Task_name in short_name
 GROUP = "Group 41"
 MEMBERS = [("EG/2021/4754", "Rathnayaka I.G.T.A"), ("EG/2021/4706", "Peiris P R S")]
 REG = "  ·  ".join(i for i, _ in MEMBERS)
-VIDEO = "https://youtu.be/RzAfwPB6Ctg"
+VIDEO = "https://youtu.be/AgEqoAu_OqE"
 REPO = "github.com/TA-rathnayaka/minichain"
 
 BG, CARD, INK, MUTE, ACC, ACC2, OK, BAD = (RGBColor(*c) for c in [(10,14,26),(19,26,46),(233,237,247),(133,146,176),(110,168,254),(167,139,250),(52,211,153),(248,113,113)])
