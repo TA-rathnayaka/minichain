@@ -1,5 +1,12 @@
 # MiniChain – Cryptocurrency Transaction System with Attack Lab
-EC8204 Blockchain and Cyber Security – Group Project
+EC8204 Blockchain and Cyber Security – Group Project (Group 41)
+
+| Member | Index number |
+|---|---|
+| Rathnayaka I.G.T.A | EG/2021/4754 |
+| Peiris P R S | EG/2021/4706 |
+
+Presentation video: https://youtu.be/RzAfwPB6Ctg
 
 A blockchain built from scratch in Node.js (zero dependencies). It records coin transfers between users and
 covers block creation, hashing, proof-of-work, signed transactions, fees, a peer-to-peer network with fork
