@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MiniChain</title>
+<style>
+:root{
+  --bg:#0a0e1a;--bg2:#0f1424;--card:#131a2e;--card2:#182038;--ink:#e9edf7;--mute:#8592b0;--line:#222c47;
+  --acc:#6ea8fe;--acc2:#a78bfa;--ok:#34d399;--okbg:rgba(52,211,153,.12);--bad:#f87171;--badbg:rgba(248,113,113,.12);--warn:#fbbf24;
+  --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 8px 24px rgba(0,0,0,.25);
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:light){:root{
+  --bg:#f3f5fb;--bg2:#e9edf7;--card:#fff;--card2:#f7f9fd;--ink:#131a2e;--mute:#5d6a87;--line:#dfe5f1;
+  --acc:#3b82f6;--acc2:#7c3aed;--ok:#059669;--okbg:rgba(5,150,105,.1);--bad:#dc2626;--badbg:rgba(220,38,38,.09);--warn:#b45309;
+  --shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
+}}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(900px 400px at 10% -10%,rgba(110,168,254,.12),transparent 60%),radial-gradient(700px 400px at 100% 0,rgba(167,139,250,.10),transparent 60%),var(--bg);
+  background-attachment:fixed;min-height:100vh}
+main{max-width:1140px;margin:0 auto;padding:28px 20px 60px}
+
+/* header */
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:20px;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 6px 18px rgba(110,168,254,.35)}
+h1{margin:0;font-size:22px;letter-spacing:-.02em;line-height:1.1}
+.sub{color:var(--mute);font-size:13px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:99px;font-weight:600;font-size:13px;border:1px solid transparent}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 25%,transparent)}
+.badge.ok{background:var(--okbg);color:var(--ok);border-color:color-mix(in srgb,var(--ok) 30%,transparent)}
+.badge.bad{background:var(--badbg);color:var(--bad);border-color:color-mix(in srgb,var(--bad) 30%,transparent)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow)}
+.stat span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
+.stat b{font-size:22px;letter-spacing:-.02em}
+
+/* toast */
+#msg{min-height:44px;margin-bottom:16px;padding:11px 16px;border-radius:12px;font-size:14px;color:var(--mute);
+  background:var(--card);border:1px dashed var(--line);display:flex;align-items:center;gap:10px}
+#msg.busy{color:var(--warn);border-style:solid;border-color:color-mix(in srgb,var(--warn) 40%,transparent)}
+#msg.busy::before{content:"";width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite}
+#msg.err{color:var(--bad);border-style:solid;border-color:color-mix(in srgb,var(--bad) 40%,transparent);background:var(--badbg)}
+#msg.good{color:var(--ok);border-style:solid;border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:var(--okbg)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* cards */
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.card h2{display:flex;align-items:center;gap:8px;font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--mute);margin:0 0 14px}
+.card h2 i{font-style:normal;font-size:15px}
+.card h2.sp{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.card.atk{border-color:color-mix(in srgb,var(--bad) 35%,var(--line))}
+
+/* form controls */
+label{display:block;font-size:12px;color:var(--mute);margin-bottom:4px}
+select,input,button{font:inherit;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);padding:9px 12px;transition:border-color .15s,box-shadow .15s,transform .05s,filter .15s}
+select:focus,input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 25%,transparent)}
+input,select{width:100%}
+button{cursor:pointer;border:0;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px rgba(110,168,254,.25)}
+button:hover{filter:brightness(1.1)}button:active{transform:translateY(1px)}
+button.warn{background:linear-gradient(135deg,#f87171,#ef4444);box-shadow:0 4px 14px rgba(248,113,113,.25)}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+button.ghost:hover{border-color:var(--mute)}
+.fields{display:grid;gap:10px;margin-bottom:10px}
+.f2{grid-template-columns:1fr 1fr}.f3{grid-template-columns:1fr 1fr 1fr}
+.arrow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
+.arrow .ar{padding-bottom:9px;color:var(--mute)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions button{flex:1}
+.hint{color:var(--mute);font-size:12.5px;margin-top:12px;line-height:1.5}
+
+/* wallets */
+.wallet{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.wallet:last-child{border-bottom:0;padding-bottom:0}.wallet:first-child{padding-top:0}
+.av{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;color:#fff;font-size:15px}
+.wi{flex:1;min-width:0}.wi b{display:block}
+.bal{font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}.bal small{color:var(--mute);font-weight:500;font-size:11px}
+.h{font-family:var(--mono);font-size:11px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* mempool */
+.pool{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.pt{display:flex;justify-content:space-between;gap:8px;padding:8px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-size:13px}
+.pt em{font-style:normal;color:var(--mute)}
+.empty{color:var(--mute);font-size:13px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;text-align:center;margin-bottom:12px}
+.count{background:var(--acc);color:#fff;border-radius:99px;padding:0 8px;font-size:11px;letter-spacing:0}
+
+/* chain */
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:30px 0 12px}
+.sec h2{margin:0;font-size:18px;letter-spacing:-.01em}
+.chain{display:flex;align-items:stretch;overflow-x:auto;padding:6px 2px 18px;scroll-snap-type:x proximity}
+.chain::-webkit-scrollbar{height:8px}.chain::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+.link{flex:none;width:28px;align-self:center;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));position:relative}
+.link::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--acc2);border-right:0}
+.link.brk{background:repeating-linear-gradient(90deg,var(--bad) 0 4px,transparent 4px 8px)}.link.brk::after{border-left-color:var(--bad)}
+.blk{flex:none;width:280px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow);font-size:13px;display:flex;flex-direction:column;gap:8px}
+.blk.err{border-color:var(--bad);background:linear-gradient(var(--badbg),var(--badbg)),var(--card)}
+.bh{display:flex;justify-content:space-between;align-items:center}
+.bh b{font-size:15px}
+.tag{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--card2);border:1px solid var(--line);color:var(--mute);font-family:var(--mono)}
+.hl{font-family:var(--mono);font-size:11px;word-break:break-all;color:var(--mute);line-height:1.4}
+.hl u{text-decoration:none;color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:.08em;display:block;font-family:inherit}
+.hl .z{color:var(--ok);font-weight:700}
+.txs{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:5px}
+.tx{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.tx .amt{font-weight:700;font-variant-numeric:tabular-nums}.tx .fee{color:var(--mute);font-size:11px;font-weight:400;margin-left:4px}
+.gen{color:var(--mute);font-style:italic;font-size:12px}
+@media (max-width:520px){main{padding:18px 14px 40px}.f3{grid-template-columns:1fr 1fr}}
+</style></head><body><main>
+
+<header>
+  <div class="brand"><div class="logo">⛓</div><div><h1>MiniChain</h1><div class="sub">Signed transactions · proof-of-work · attack lab</div></div></div>
+  <span id="valid" class="badge ok">Loading…</span>
+</header>
+
+<div class="stats">
+  <div class="stat"><span>Blocks</span><b id="sBlocks">–</b></div>
+  <div class="stat"><span>Difficulty</span><b id="sDiff">–</b></div>
+  <div class="stat"><span>Block reward</span><b id="sRew">–</b></div>
+  <div class="stat"><span>Pending tx</span><b id="sPend">–</b></div>
+</div>
+<span id="meta" hidden></span>
+
+<div id="msg">Ready.</div>
+
+<div class="grid">
+  <div class="card"><h2><i>👛</i>Wallets</h2><div id="wallets"></div></div>
+
+  <div class="card">
+    <h2><i>💸</i>Send coins</h2>
+    <div class="arrow">
+      <div><label for="from">From</label><select id="from"></select></div><div class="ar">→</div>
+      <div><label for="to">To</label><select id="to"></select></div>
+    </div>
+    <div class="fields f2" style="margin-top:10px">
+      <div><label for="amt">Amount</label><input id="amt" type="number" min="1" value="10" title="amount"></div>
+      <div><label for="fee">Fee (to miner)</label><input id="fee" type="number" min="0" value="1" title="fee (paid to miner)"></div>
+    </div>
+    <div class="actions"><button onclick="send()">Sign &amp; broadcast</button></div>
+
+    <h2 class="sp"><i>⏳</i>Mempool <span class="count" id="mp">0</span></h2>
+    <div id="mempool"></div>
+    <div class="actions"><button onclick="mine()">⛏ Mine block</button><button class="ghost" onclick="post('/api/reset')">Reset</button></div>
+  </div>
+
+  <div class="card atk">
+    <h2><i>☠️</i>Attack lab</h2>
+    <div class="fields f2">
+      <div><label for="tb">Block #</label><input id="tb" type="number" value="2" title="block"></div>
+      <div><label for="ta">New amount</label><input id="ta" type="number" value="2000" title="amount"></div>
+    </div>
+    <div class="actions"><button class="warn" onclick="tamper()">Tamper with block</button><button id="restore" class="ghost" onclick="post('/api/restore')" style="display:none">Restore chain</button></div>
+
+    <div class="fields f2" style="margin-top:18px">
+      <div><label for="ff">Fork from block</label><input id="ff" type="number" value="1" title="fork from block"></div>
+      <div><label for="fb">Attacker blocks</label><input id="fb" type="number" value="4" title="attacker blocks"></div>
+    </div>
+    <div class="actions"><button class="warn" onclick="attack()">51% attack</button></div>
+    <div class="hint">Tamper edits an old amount and breaks every later hash. The 51% attack mines a secret fork of N blocks from block F; it only wins with more total work.</div>
+  </div>
+</div>
+
+<div class="sec"><h2>Blockchain</h2><span class="sub">Scroll →</span></div>
+<div id="chain" class="chain"></div>
+
+<script>
+let S=null;const $=id=>document.getElementById(id);
+const COLORS=['#6ea8fe','#a78bfa','#34d399','#fbbf24','#f472b6','#fb923c'];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const color=n=>COLORS[[...String(n)].reduce((a,c)=>a+c.charCodeAt(0),0)%COLORS.length];
+const short=h=>h&&h.length>20?h.slice(0,10)+'…'+h.slice(-8):h;
+const zeros=h=>{const m=/^0*/.exec(h)[0].length;return `<span class="z">${h.slice(0,m)}</span>${h.slice(m)}`};
+function say(t,k){const m=$('msg');m.className=k||'';m.textContent=t}
+
+async function api(p,b){const r=await fetch(p,b?{method:'POST',body:JSON.stringify(b)}:{});const j=await r.json();if(!r.ok)throw new Error(j.error);return j}
+async function post(p,b){try{const j=await api(p,b||{});render(j);
+  if(j.attack)say(j.attack.replaced?`51% attack SUCCEEDED: chain ${j.attack.honestLength} → ${j.attack.newLength} blocks, history rewritten`:`51% attack FAILED: ${j.attack.reason}`,j.attack.replaced?'err':'good');
+  else say('Done.','good')}catch(e){say('✗ '+e.message,'err')}}
+const send=()=>post('/api/send',{from:$('from').value,to:$('to').value,amount:$('amt').value,fee:$('fee').value});
+const mine=()=>{say('Mining… searching for a valid nonce','busy');setTimeout(()=>post('/api/mine'),20)};
+const tamper=()=>post('/api/tamper',{block:$('tb').value,amount:$('ta').value});
+const attack=()=>{say('Attacker mining secret fork…','busy');setTimeout(()=>post('/api/attack51',{forkFrom:$('ff').value,blocks:$('fb').value}),20)};
+
+function render(s){S=s;const v=s.validity;
+ $('valid').className='badge '+(v.valid?'ok':'bad');
+ $('valid').textContent=v.valid?'Chain valid':`Invalid at block #${v.atBlock}: ${v.error}`;
+ $('sBlocks').textContent=s.chain.length;$('sDiff').textContent=s.difficulty;$('sRew').textContent=s.reward;$('sPend').textContent=s.mempool.length;
+ $('meta').textContent=`difficulty ${s.difficulty} · reward ${s.reward} · ${s.chain.length} blocks`;
+
+ $('wallets').innerHTML=s.wallets.map(w=>`<div class="wallet"><div class="av" style="background:${color(w.name)}">${esc(w.name[0])}</div>
+  <div class="wi"><b>${esc(w.name)}</b><div class="h" title="${esc(w.address)}">${esc(short(w.address))}</div></div>
+  <div class="bal">${w.balance} <small>coins</small></div></div>`).join('');
+
+ const names=s.wallets.filter(w=>w.name!=='Attacker').map(w=>w.name),opt=names.map(n=>`<option>${esc(n)}</option>`).join('');
+ if(!$('from').options.length){$('from').innerHTML=opt;$('to').innerHTML=opt;$('to').selectedIndex=1}
+
+ $('restore').style.display=s.canRestore?'':'none';$('mp').textContent=s.mempool.length;
+ $('mempool').innerHTML=s.mempool.length
+  ?`<div class="pool">${s.mempool.map(t=>`<div class="pt"><span>${esc(t.from)} → ${esc(t.to)}</span><span><b>${t.amount}</b> <em>fee ${t.fee}</em></span></div>`).join('')}</div>`
+  :'<div class="empty">No pending transactions</div>';
+
+ $('chain').innerHTML=s.chain.map((b,i)=>{
+  const bad=!v.valid&&v.atBlock===b.index;
+  return (i?`<div class="link ${!v.valid&&v.atBlock===b.index?'brk':''}"></div>`:'')+
+  `<div class="blk ${bad?'err':''}"><div class="bh"><b>Block #${b.index}</b><span class="tag">nonce ${b.nonce}</span></div>
+   <div class="hl"><u>hash</u>${zeros(esc(b.hash))}</div><div class="hl"><u>prev</u>${esc(b.previousHash)}</div>
+   <div class="txs">${b.transactions.map(t=>`<div class="tx"><span>${esc(t.from)} → ${esc(t.to)}</span><span class="amt">${t.amount}${t.fee?`<span class="fee">fee ${t.fee}</span>`:''}</span></div>`).join('')||'<div class="gen">genesis block</div>'}</div></div>`}).join('');
+}
+api('/api/state').then(render).then(()=>say('Ready.'));
+</script></main></body></html>

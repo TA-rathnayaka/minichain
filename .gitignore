@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+
+# demo video / voice-over assets
+voiceover/
+*.mp4
+*.webm
+*.m4a

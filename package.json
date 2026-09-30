@@ -1,0 +1,14 @@
+{
+  "name": "minichain",
+  "version": "1.0.0",
+  "description": "MiniChain - a from-scratch cryptocurrency blockchain with signed transactions, proof-of-work and attack simulations (EC8204 group project)",
+  "main": "src/blockchain.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "node": "node src/node.js",
+    "network": "node scripts/network-demo.js",
+    "test": "node --test test/*.test.js",
+    "demo": "node scripts/demo.js"
+  },
+  "license": "MIT"
+}
