@@ -57,7 +57,7 @@ text(s, 8.1, 0.8, 4.4, 0.7, [f"{i}  {n}" for i, n in MEMBERS], 16, INK, True)
 rows = [("PROJECT NAME", "MiniChain – Cryptocurrency Transaction System with Attack Lab", ACC),
         ("DOMAIN", "Blockchain & Cyber Security  (Cryptocurrency · FinTech)", ACC),
         ("APPLICATION", "A from-scratch blockchain for signed coin transfers with proof-of-work mining, a peer-to-peer network and an attack lab that demonstrates – and defends against – forgery, double spending, replay, tampering and 51% attacks.", ACC),
-        ("3 MIN VIDEO", VIDEO, OK)]
+        ("3 MIN VIDEO", "Watch the 3-minute presentation video on YouTube", OK)]
 ys, hs = [1.75, 2.85, 3.95, 5.75], [0.95, 0.95, 1.6, 0.95]
 for (lab, val, col), y, h in zip(rows, ys, hs):
     box(s, 0.7, y, 11.9, h, r=0.1)
@@ -113,8 +113,10 @@ box(s, 8.7, 1.75, 3.9, 4.9, ACC, 0.06)
 text(s, 8.95, 2.05, 3.5, 1, ["Thank you"], 36, ACC, True)
 lines = [GROUP]
 for i, n in MEMBERS: lines += [n, i]
-lines += ["", "GitHub: " + REPO.split("/", 1)[1], "Video: " + VIDEO.replace("https://", "")]
-text(s, 8.95, 3.1, 3.5, 3.4, lines, 14, INK)
+lines += ["", "GitHub: " + REPO.split("/", 1)[1], "Watch the presentation video"]
+tf = text(s, 8.95, 3.1, 3.5, 3.4, lines, 14, INK)
+r = tf.paragraphs[-1].runs[0]; r.hyperlink.address = VIDEO; r.font.color.rgb = ACC; r.font.underline = True
+r = tf.paragraphs[-2].runs[0]; r.hyperlink.address = "https://" + REPO; r.font.color.rgb = ACC; r.font.underline = True
 
 prs.save(OUT)
 print("saved", OUT, "-", len(prs.slides._sldIdLst), "slides")

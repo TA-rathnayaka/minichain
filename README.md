@@ -6,7 +6,7 @@ EC8204 Blockchain and Cyber Security – Group Project (Group 41)
 | Rathnayaka I.G.T.A | EG/2021/4754 |
 | Peiris P R S | EG/2021/4706 |
 
-Presentation video: https://youtu.be/AgEqoAu_OqE
+[Watch the presentation video](https://youtu.be/AgEqoAu_OqE)
 
 A blockchain built from scratch in Node.js (zero dependencies). It records coin transfers between users and
 covers block creation, hashing, proof-of-work, signed transactions, fees, a peer-to-peer network with fork
